@@ -1,7 +1,18 @@
-﻿#include <iostream>
+#include "Calculator.h"
 
-int main()
+double Calculator::Calculate(double x, char oper, double y)
 {
-    std::cout << "Hello World!\n";
-    std::cout << 5;
+    switch (oper)
+    {
+    case '+':
+        return x + y;
+    case '-':
+        return x - y;
+    case '*':
+        return x * y;
+    case '/':
+        return x / y;
+    default:
+        return 0.0;
+    }
 }

@@ -1,0 +1,3 @@
+﻿  Operations.cpp
+C:\Users\Jeka\Documents\GitHub\Cpp-programming\Calculator\Operations.cpp(22,46): warning C4267: return: преобразование из "size_t" в "const int"; возможна потеря данных
+  Calculator.vcxproj -> C:\Users\Jeka\Documents\GitHub\Cpp-programming\Calculator\x64\Debug\Calculator.exe
