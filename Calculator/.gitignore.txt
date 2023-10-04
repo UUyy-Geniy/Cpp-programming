@@ -1,0 +1,6 @@
+./x64
+./Debug
+Calculator.vcxproj
+Calculator.vcxproj.filters
+Calculator.vcxproj.user
+Calculator.sln
