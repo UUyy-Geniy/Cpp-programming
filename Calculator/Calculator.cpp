@@ -1,18 +1,14 @@
 #include "Calculator.h"
 
-double Calculator::Calculate(double x, char oper, double y)
-{
-    switch (oper)
-    {
-    case '+':
-        return x + y;
-    case '-':
-        return x - y;
-    case '*':
-        return x * y;
-    case '/':
-        return x / y;
-    default:
-        return 0.0;
-    }
+Calculator& Calculator::getInstance() {
+    static Calculator instance;
+    return instance;
+};
+
+std::string Calculator::parser(std::string exp) {
+    return "";
+}
+
+double Calculator::calculate(std::string exp) {
+    return 0;
 }
