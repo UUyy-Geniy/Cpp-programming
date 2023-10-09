@@ -1,20 +1,21 @@
-﻿#include <iostream>
-//#include "Calculator.h"
-#include <Windows.h>
-
-using namespace std;
+﻿#include "Calculator.h"
 
 int main()
 {
-    HINSTANCE load;
-    load = LoadLibrary(L"./plugins\\Dinamic_cos.dll");
-    typedef double (*Sin) (double);
-    Sin sinnn;
-    sinnn = (Sin)GetProcAddress(load, "func");
+	Calculator calculator;
+	std::string expression;
+	std::cout << "Enter expression(enter ~ to escape):" << std::endl;
+	std::getline(std::cin, expression);
+	while (expression != "~") {
+		try {
+			std::cout << expression << "=" << calculator.calculate(expression) << std::endl;
+		}
+		catch (std::exception& error) {
+			std::cout << error.what() << std::endl;
+		}
+		std::cout << "Enter expression(enter ~ to escape):" << std::endl;
+		std::getline(std::cin, expression);
+	}
 
-    double a = 3.14;
-    std::cout << sinnn(a);
-
-    FreeLibrary(load);
-    return 0;
+	return 0;
 }

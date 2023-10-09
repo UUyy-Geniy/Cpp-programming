@@ -1,5 +1,6 @@
 #include "Operations.h"
 
+
 Operations::Operations() {
 	operations["+"] = [](double a, double b)->double {return b + a; };
 	operations["-"] = [](double a, double b)->double {return b - a; };
@@ -13,19 +14,19 @@ Operations::Operations() {
 	operations_priority.insert(std::make_pair("(", 1));
 };
 
-Operations& Operations::getInstance() {
-    static Operations instance;
-    return instance;
+Operations& Operations::getOperations() {
+	static Operations instance;
+	return instance;
 };
 
-int const Operations::priority(std::string const& operationName) {
-    return operations_priority[operationName];
+int const Operations::priority(const std::string& operation) {
+	return operations_priority[operation];
 }
 
-double Operations::operation(double const& a, double const& b, std::string const& name) {
-    return operations[name](a, b);
-}
+double Operations::calculation(double a, double b, const std::string& name) {
+	return operations[name](a, b);
+};
 
-bool Operations::contains(std::string const& name) {
-    return operations.find(name) != operations.end();
+bool Operations::contains(const std::string& name) {
+	return operations.find(name) != operations.end();
 }

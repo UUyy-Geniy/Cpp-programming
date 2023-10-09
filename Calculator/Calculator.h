@@ -1,19 +1,21 @@
 #pragma once
+#include <iostream>
 #include <string>
+#include <stack>
+#include "Operations.h"
+#include <sstream>
+#include "Loader.h"
+
 
 
 class Calculator
 {
+	std::string parser(std::string exp);
+	std::stack<double> numbers;
+	Loader loader;
+public:
 	Calculator() = default;
 	~Calculator() = default;
-	std::string parser(std::string exp);
-public:
-	Calculator(const Calculator&) = delete;
-	Calculator& operator=(Calculator const&) = delete;
-	Calculator(Calculator&&) = delete;
-	Calculator& operator=(Calculator&&) = delete;
-
-	static Calculator& getInstance();
 	double calculate(std::string exp);
 };
 
