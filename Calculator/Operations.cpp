@@ -1,17 +1,18 @@
 #include "Operations.h"
 
 
-Operations::Operations() {
-	operations["+"] = [](double a, double b)->double {return b + a; };
-	operations["-"] = [](double a, double b)->double {return b - a; };
-	operations["*"] = [](double a, double b)->double {return b * a; };
-	operations["/"] = [](double a, double b)->double {return b / a; };
 
-	operations_priority.insert(std::make_pair("*", 3));
-	operations_priority.insert(std::make_pair("/", 3));
-	operations_priority.insert(std::make_pair("+", 2));
-	operations_priority.insert(std::make_pair("-", 2));
-	operations_priority.insert(std::make_pair("(", 1));
+Operations::Operations() {
+	operations_binary["+"] = [](double a, double b)->double {return b + a; };
+	operations_binary["-"] = [](double a, double b)->double {return b - a; };
+	operations_binary["*"] = [](double a, double b)->double {return b * a; };
+	operations_binary["/"] = [](double a, double b)->double {return b / a; };
+
+	operations_priority["*"] = 3;
+	operations_priority["/"] = 3;
+	operations_priority["+"] = 2;
+	operations_priority["-"] = 2;
+	operations_priority["("] = 1;
 };
 
 Operations& Operations::getOperations() {
@@ -19,14 +20,35 @@ Operations& Operations::getOperations() {
 	return instance;
 };
 
+void Operations::addBinaryOperation(const std::string& dllFileName, binary& func, unsigned short priority) {
+	operations_binary[dllFileName] = func;
+	operations_priority[dllFileName] = priority;
+}
+
+void Operations::addUnaryOperation(const std::string& dllFileName, unary& func, unsigned short priority) {
+	operations_unary[dllFileName] = func;
+	operations_priority[dllFileName] = priority;
+}
+
 int const Operations::priority(const std::string& operation) {
 	return operations_priority[operation];
 }
 
 double Operations::calculation(double a, double b, const std::string& name) {
-	return operations[name](a, b);
+	if (contains_binary(name)) { return operations_binary[name](a, b); }
+	if (contains_unary(name)) { return operations_unary[name](a); }
+	throw std::exception("Operation was not found");
+	return INFINITY;
 };
 
+bool Operations::contains_binary(const std::string& name) {
+	return operations_binary.find(name) != operations_binary.end();
+}
+
+bool Operations::contains_unary(const std::string& name) {
+	return operations_unary.find(name) != operations_unary.end();
+}
+
 bool Operations::contains(const std::string& name) {
-	return operations.find(name) != operations.end();
+	return contains_unary(name) || contains_binary(name);
 }

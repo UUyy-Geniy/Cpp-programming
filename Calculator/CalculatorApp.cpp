@@ -2,7 +2,8 @@
 
 int main()
 {
-	Calculator calculator;
+	Loader loader;
+	Calculator calculator = Calculator(loader);
 	std::string expression;
 	std::cout << "Enter expression(enter ~ to escape):" << std::endl;
 	std::getline(std::cin, expression);

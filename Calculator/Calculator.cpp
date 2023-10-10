@@ -1,152 +1,163 @@
 #include "Calculator.h"
 
-
-std::string Calculator::parser(std::string exp) {
-	std::string res;
-
-	std::string::size_type ind;
-	while ((ind = exp.find(' ')) != std::string::npos) exp.erase(ind, 1); 
-
-	for (int i = 0; i < exp.size(); ++i) { // (-num) to (0-num)
-		if ((exp[i] == '+' || exp[i] == '-') && (0 == i || (!isdigit(exp[i - 1]) && exp[i - 1] != '.' && exp[i - 1] != ')'))) {
-			auto it = std::find_if(exp.begin() + i + 1, exp.end(), [](char const c) {return !isdigit(c); });
-			exp.insert(it, ')');
-			exp.insert(i, "(0");
-		}
+std::string takeNum(int& index, const std::string& exp) {
+	std::string num = "";
+	while ((isdigit(exp[index]) || exp[index] == '.')) {
+		num += exp[index];
+		index++;
 	}
-
-	std::stack<std::string> stack;
-	for (auto c : exp) {
-		if (!isdigit(c) && ('.' != c)) {
-			if (!isalpha(c)) {
-				res += ' ';
-			}
-			else {
-				res += c;
-				continue;
-			}
-			if (')' == c) {
-				while (stack.top() != "(") {
-					res += stack.top();
-					stack.pop();
-					res += ' ';
-				}
-				stack.pop();
-			}
-			else if ('(' == c) {
-				stack.push({ c });
-			}
-			else if (stack.empty() || ((Operations::getOperations().contains({ c }))
-				&& (Operations::getOperations().priority(stack.top()) < Operations::getOperations().priority({ c })))) {
-				stack.push({ c });
-			}
-			else {
-				do {
-					res += stack.top();
-					res += ' ';
-					stack.pop();
-				} while (!(stack.empty() || (Operations::getOperations().priority(stack.top()) < Operations::getOperations().priority({ c }))));
-				stack.push({ c });
-			}
-		}
-		else {
-			res += c;
-		}
-	}
-	while (!stack.empty()) {
-		res += stack.top();
-		res += ' ';
-		stack.pop();
-	}
-
-	return res;
+	return num;
 }
 
-double Calculator::calculate(std::string exp) {
-	exp = parser(exp);
-	std::string curr_num = "";
-	for (int i = 0; i < exp.size(); i++) {
-		if (exp[i] == ' ') {
-			if (curr_num == "") {
-				continue;
-			}
-			double num = std::atof(curr_num.c_str());
-			numbers.push(num);
-			curr_num = "";
-			continue;
+std::string takeFunc(int& index, const std::string& exp) {
+	std::string func = "";
+	while (isalpha(exp[index])) {
+		func += exp[index];
+		index++;
+	}
+	if (exp[index] != '(') {
+		throw std::exception("Func is invalid");
+		return "";
+	}
+	return func;
+}
+
+std::vector<std::string> Calculator::parser(const std::string& exp) {
+	std::string expression = exp;
+	std::string res;
+	std::string cur_number;
+	std::string current_fun = "";
+	std::string::size_type ind;
+	std::vector<std::string> result;
+	while ((ind = expression.find(' ')) != std::string::npos) expression.erase(ind, 1);
+
+	for (int i = 0; i < expression.size(); ++i) { // (-num) to (0-num)
+		if ((expression[i] == '+' || expression[i] == '-') && (i == 0 || (!isdigit(expression[i - 1]) && expression[i - 1] != '.' && expression[i - 1] != ')'))) {
+			auto it = std::find_if(expression.begin() + i + 1, expression.end(), [](char const c) {return !isdigit(c); });
+			expression.insert(it, ')');
+			expression.insert(i, "(0");
 		}
-		if (isdigit(exp[i]) || exp[i] == '.') {
-			curr_num.push_back(exp[i]);
-		}
-		else {
-			if (!(curr_num == "")) {
-				double num = std::atof(curr_num.c_str());
-				numbers.push(num);
-				curr_num = "";
-			}
+	}
+	int i = 0;
+	char cur_symb;
+	std::stack<std::string> stack;
+	while (i < expression.size()) {
+	
+		cur_symb = expression[i];
+		if (isdigit(cur_symb)) {
 			try {
-				double a, b;
-				if (Operations::getOperations().contains({ exp[i] })) {
-					a = numbers.top();
-					numbers.pop();
-					b = 0;
-					b = numbers.top();
-					numbers.pop();
-					numbers.push(Operations::getOperations().calculation(a, b, { exp[i] }));
-				}
-				else {
-					std::string cur_op = "";
-					if (isalpha(exp[i])) {
-						while (isalpha(exp[i])) {
-							cur_op += exp[i];
-							i++;
-						}
+				cur_number = takeNum(i, expression);
+			}
+			catch (std::exception& l) {
+				throw std::exception(l.what());
+				break;
+			}
+			result.push_back(cur_number);
+		}
+		else if (isalpha(cur_symb)) {
+
+			try {
+				current_fun = takeFunc(i, expression);
+			}
+			catch (std::exception& e) {
+				throw std::exception(e.what());
+				break;
+			}
+
+			try {
+				if (!operations.contains(current_fun)) {
+					try {
+						loader.loadDll(current_fun,operations);
 					}
-					if (loader.binary_contains(cur_op) || loader.unary_contains(cur_op)) {
-						if (loader.binary_contains(cur_op)) {
-							curr_num = "";
-							while (isdigit(exp[i]) || exp[i] == ' ' || exp[i] == '.') {
-								if (exp[i] == ' ') {
-									continue;
-								}
-								curr_num += exp[i];
-								i++;
-							}
-							double num = std::atof(curr_num.c_str());
-							numbers.push(num);
-							curr_num = "";
-							a = numbers.top();
-							numbers.pop();
-							b = numbers.top();
-							numbers.pop();
-							numbers.push(loader.operation(a, b, cur_op));
-						}
-						else if (loader.unary_contains(cur_op)) {
-							curr_num = "";
-							i++;
-							while (exp[i] != ' ') {
-								curr_num += exp[i];
-								i++;
-							}
-							double num = std::atof(curr_num.c_str());
-							numbers.push(num);
-							curr_num = "";
-							a = numbers.top();
-							numbers.pop();
-							b = 0;
-							numbers.push(loader.operation(a, b, cur_op));
-						}
-					}
-					else {
-						loader.loadDll(cur_op);
-						i = i - cur_op.size() - 1;
+					catch (std::exception& e) {
+						throw std::exception(e.what());
 					}
 				}
 			}
 			catch (std::exception& e) {
-				std::cout << e.what();
+				throw std::exception(e.what());
+				break;
+			}
+
+			while (!stack.empty()) {
+				if (operations.priority(current_fun) <= operations.priority(stack.top())) {
+					result.push_back(stack.top());
+					stack.pop();
+				}
+				else {
+					stack.push(current_fun);
+					current_fun = "";
+					break;
+				}
+			}
+
+			if (stack.empty()) {
+				stack.push(current_fun);
+				current_fun = "";
+			}
+
+
+		}
+		else if (cur_symb == '(') {
+			stack.push({ cur_symb });
+			i++;
+		}
+		else if (cur_symb == ')') {
+			while (stack.top() != "(") {
+
+				result.push_back(stack.top());
+				stack.pop();
+			}
+			stack.pop();
+			i++;
+		}
+		else if (operations.contains({ cur_symb })) { // нашли оператор
+			while (!stack.empty()) {
+				if (operations.priority({ cur_symb }) <= operations.priority(stack.top())) {
+					result.push_back(stack.top());
+					stack.pop();
+				}
+				else {
+					stack.push({ cur_symb });
+					break;
+				}
+			}
+			if (stack.empty()) {
+				stack.push({ cur_symb });
+			}
+			i++;
+		}
+	}
+	while (!stack.empty()) {
+		result.push_back(stack.top());
+		stack.pop();
+	}
+	return result;
+}
+
+
+double Calculator::calculate(const std::string& exp) {
+	std::vector<std::string> pars = parser(exp);
+	std::stack<double> result;
+	double arg1 = 0, arg2 = 0;
+
+	for (auto& element : pars) {
+		if (isdigit(element[0])) result.push(std::stod(element));
+		else {
+			arg1 = result.top();
+			result.pop();
+			if (operations.contains_binary(element)) {
+				arg2 = result.top();
+				result.pop();
+				result.push(operations.calculation(arg1, arg2, element));
+			}
+			else {
+				if (operations.contains_unary({ element })) {
+					arg2 = 0;
+					result.push(operations.calculation(arg1, arg2, element));
+				}
 			}
 		}
 	}
-	return numbers.top();
+	return result.top();
 }
