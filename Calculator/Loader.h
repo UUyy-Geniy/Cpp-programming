@@ -7,7 +7,7 @@
 #include<Windows.h>
 
 class Loader {
-    std::string path = "C:\\Users\\Jeka\\Documents\\GitHub\\Cpp-programming\\Calculator\\plugins\\";
+    std::string path = "./plugins\\";
 public:
     void loadDll(const std::string& dllFileName, Operations& operations);
 }; 
