@@ -1,8 +1,16 @@
 #include "Calculator.h"
 
+void isValidSymb(char c) {
+	if (c >= -1 && c <= 255) return;
+	throw std::exception("Invalid input expression");
+}
+
 std::string takeNum(int& index, const std::string& exp) {
 	std::string num = "";
+	int cnt = 0;
 	while ((isdigit(exp[index]) || exp[index] == '.')) {
+		if (exp[index] == '.') { cnt++; }
+		if (cnt == 2) { throw std::exception("Number is invalid"); }
 		num += exp[index];
 		index++;
 	}
@@ -11,11 +19,11 @@ std::string takeNum(int& index, const std::string& exp) {
 
 std::string takeFunc(int& index, const std::string& exp) {
 	std::string func = "";
-	while (isalpha(exp[index])) {
+	while (isalpha(exp[index])||(exp[index])=='^') {
 		func += exp[index];
 		index++;
 	}
-	if (exp[index] != '(') {
+	if ((exp[index] != '(') && (exp[index-1]!='^')) {
 		throw std::exception("Func is invalid");
 		return "";
 	}
@@ -37,48 +45,26 @@ std::vector<std::string> Calculator::parser(const std::string& exp) {
 			expression.insert(it, ')');
 			expression.insert(i, "(0");
 		}
+		isValidSymb(expression[i]);
 	}
 	int i = 0;
 	char cur_symb;
 	std::stack<std::string> stack;
 	while (i < expression.size()) {
-	
+
 		cur_symb = expression[i];
 		if (isdigit(cur_symb)) {
-			try {
-				cur_number = takeNum(i, expression);
-			}
-			catch (std::exception& l) {
-				throw std::exception(l.what());
-				break;
-			}
+			cur_number = takeNum(i, expression);
 			result.push_back(cur_number);
 		}
-		else if (isalpha(cur_symb)) {
-
-			try {
-				current_fun = takeFunc(i, expression);
+		else if (isalpha(cur_symb)||(cur_symb == '^')) {
+			current_fun = takeFunc(i, expression);
+			if (current_fun == "^") {
+				current_fun = "pow";
 			}
-			catch (std::exception& e) {
-				throw std::exception(e.what());
-				break;
+			if (!operations.contains(current_fun)) {
+				loader.loadDll(current_fun, operations);
 			}
-
-			try {
-				if (!operations.contains(current_fun)) {
-					try {
-						loader.loadDll(current_fun,operations);
-					}
-					catch (std::exception& e) {
-						throw std::exception(e.what());
-					}
-				}
-			}
-			catch (std::exception& e) {
-				throw std::exception(e.what());
-				break;
-			}
-
 			while (!stack.empty()) {
 				if (operations.priority(current_fun) <= operations.priority(stack.top())) {
 					result.push_back(stack.top());
@@ -96,7 +82,6 @@ std::vector<std::string> Calculator::parser(const std::string& exp) {
 				current_fun = "";
 			}
 
-
 		}
 		else if (cur_symb == '(') {
 			stack.push({ cur_symb });
@@ -108,10 +93,13 @@ std::vector<std::string> Calculator::parser(const std::string& exp) {
 				result.push_back(stack.top());
 				stack.pop();
 			}
+			if (stack.empty()) {
+				throw std::exception("Not enough (");
+			}
 			stack.pop();
 			i++;
 		}
-		else if (operations.contains({ cur_symb })) { // нашли оператор
+		else if (operations.contains({ cur_symb })) { 
 			while (!stack.empty()) {
 				if (operations.priority({ cur_symb }) <= operations.priority(stack.top())) {
 					result.push_back(stack.top());
@@ -127,8 +115,12 @@ std::vector<std::string> Calculator::parser(const std::string& exp) {
 			}
 			i++;
 		}
+		else { throw std::exception("Symbol is invalid"); }
 	}
 	while (!stack.empty()) {
+		if (stack.top() == "(") {
+			throw std::exception("Not enough )");
+		}
 		result.push_back(stack.top());
 		stack.pop();
 	}
@@ -144,15 +136,17 @@ double Calculator::calculate(const std::string& exp) {
 	for (auto& element : pars) {
 		if (isdigit(element[0])) result.push(std::stod(element));
 		else {
+			if (result.empty()) { throw std::exception("Not enough args"); }
 			arg1 = result.top();
 			result.pop();
 			if (operations.contains_binary(element)) {
+				if (result.empty()) { throw std::exception("Not enough args"); }
 				arg2 = result.top();
 				result.pop();
-				result.push(operations.calculation(arg1, arg2, element));
+				result.push(operations.calculation(arg2, arg1, element));
 			}
 			else {
-				if (operations.contains_unary({ element })) {
+				if (operations.contains_unary( element )) {
 					arg2 = 0;
 					result.push(operations.calculation(arg1, arg2, element));
 				}

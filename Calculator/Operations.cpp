@@ -1,18 +1,15 @@
 #include "Operations.h"
 
-
-
 Operations::Operations() {
 	operations_binary["+"] = [](double a, double b)->double {return b + a; };
-	operations_binary["-"] = [](double a, double b)->double {return b - a; };
+	operations_binary["-"] = [](double a, double b)->double {return a - b; };
 	operations_binary["*"] = [](double a, double b)->double {return b * a; };
-	operations_binary["/"] = [](double a, double b)->double {return b / a; };
+	operations_binary["/"] = [](double a, double b)->double {if (b != 0) return a / b; throw std::exception("Division by zero!"); };
 
-	operations_priority["*"] = 3;
-	operations_priority["/"] = 3;
-	operations_priority["+"] = 2;
-	operations_priority["-"] = 2;
-	operations_priority["("] = 1;
+	operations_priority["*"] = 2;
+	operations_priority["/"] = 2;
+	operations_priority["+"] = 1;
+	operations_priority["-"] = 1;
 };
 
 Operations& Operations::getOperations() {

@@ -14,7 +14,6 @@ private:
     std::map<std::string, unary> operations_unary;
     std::map<std::string, unsigned short> operations_priority;
 public:
-    ~Operations() { std::cout << "Sany gey"; };
     void addBinaryOperation(const std::string& dllFileName, binary& func, unsigned short priority);
     void addUnaryOperation(const std::string& dllFileName, unary& func, unsigned short priority);
     static Operations& getOperations();

@@ -6,8 +6,6 @@
 #include "Loader.h"
 #include <vector>
 
-
-
 class Calculator
 {
 	std::vector<std::string> parser(const std::string& exp);	
@@ -15,6 +13,8 @@ class Calculator
 	Loader loader;
 	Operations operations;
 public:
+	Calculator() = default;
+	~Calculator() = default;
 	Calculator(Loader const& loader) : loader(loader), numbers(), operations(Operations::getOperations()) {};
 	double calculate(const std::string& exp);
 };

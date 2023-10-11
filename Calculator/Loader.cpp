@@ -17,10 +17,10 @@ void Loader::loadDll(const std::string& dllFileName, Operations& operations) {
 			operations.addBinaryOperation(function,bfunc,4);
 			std::cout << function + " was loaded";
 		}
-		else
-			operations.addUnaryOperation(function, ufunc, 4);
-		std::cout << function + " was loaded";
-
+		else {
+			operations.addUnaryOperation(function, ufunc, 3);
+			std::cout << function + " was loaded";
+		}
 	}
 	else {
 		throw std::exception(("Failed to load DLL: " + dllFileName+"\n").c_str());

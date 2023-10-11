@@ -6,7 +6,6 @@
 #include "Operations.h"
 #include<Windows.h>
 
-
 class Loader {
     std::string path = "C:\\Users\\Jeka\\Documents\\GitHub\\Cpp-programming\\Calculator\\plugins\\";
 public:
