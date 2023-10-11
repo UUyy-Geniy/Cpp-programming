@@ -10,5 +10,5 @@ class Loader {
     std::string path = "C:\\Users\\Jeka\\Documents\\GitHub\\Cpp-programming\\Calculator\\plugins\\";
 public:
     void loadDll(const std::string& dllFileName, Operations& operations);
-};
+}; 
 

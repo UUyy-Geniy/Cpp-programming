@@ -9,7 +9,7 @@ using binary = double(*)(double, double);
 
 class Operations {
 private:
-    Operations();
+    Operations(); 
     std::map<std::string, binary> operations_binary;
     std::map<std::string, unary> operations_unary;
     std::map<std::string, unsigned short> operations_priority;

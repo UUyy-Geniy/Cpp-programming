@@ -15,6 +15,6 @@ COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/plugins
 COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/plugins ${CMAKE_BINARY_DIR}/plugins
 
 )
-
+ 
 add_dependencies("Calculator" AddPlugins)
 # TODO: Добавьте тесты и целевые объекты, если это необходимо.
