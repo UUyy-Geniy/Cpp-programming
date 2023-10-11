@@ -7,7 +7,7 @@ project ("Calculator")
 # Добавьте источник в исполняемый файл этого проекта.
 add_executable (Calculator "Calculator.cpp" "Calculator.h" "Loader.h" "Loader.cpp" "Operations.h" "Operations.cpp" "CalculatorApp.cpp")
 
-add_custom_target(AddPlugins ALL)
+add_custom_target(NewPlugins ALL)
 
 add_custom_command(
 TARGET NewPlugins
@@ -16,5 +16,5 @@ COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/plugins ${CMAKE_B
 
 )
  
-add_dependencies("Calculator" AddPlugins)
+add_dependencies("Calculator" NewPlugins)
 # TODO: Добавьте тесты и целевые объекты, если это необходимо.
