@@ -1,0 +1,2 @@
+C:/Users/Jeka/Documents/GitHub/Cpp-programming/Calculator/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Jeka/Documents/GitHub/Cpp-programming/Calculator/cmake-build-debug/CMakeFiles/rebuild_cache.dir
