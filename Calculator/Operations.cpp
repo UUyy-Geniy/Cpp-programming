@@ -1,5 +1,5 @@
 #include "Operations.h"
-
+ 
 Operations::Operations() {
 	operations_binary["+"] = [](double a, double b)->double {return b + a; };
 	operations_binary["-"] = [](double a, double b)->double {return a - b; };

@@ -15,7 +15,7 @@ std::string takeNum(int& index, const std::string& exp) {
 		index++;
 	}
 	return num;
-}
+} 
 
 std::string takeFunc(int& index, const std::string& exp) {
 	std::string func = "";

@@ -20,7 +20,7 @@ void Loader::loadDll(const std::string& dllFileName, Operations& operations) {
 		else {
 			operations.addUnaryOperation(function, ufunc, 3);
 			std::cout << function + " was loaded";
-		}
+		} 
 	}
 	else {
 		throw std::exception(("Failed to load DLL: " + dllFileName+"\n").c_str());
