@@ -1,3 +1,0 @@
-C:/Users/Jeka/Documents/GitHub/Cpp-programming/Calculator/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
-C:/Users/Jeka/Documents/GitHub/Cpp-programming/Calculator/out/build/x64-Debug/CMakeFiles/Calculator.dir
-C:/Users/Jeka/Documents/GitHub/Cpp-programming/Calculator/out/build/x64-Debug/CMakeFiles/edit_cache.dir

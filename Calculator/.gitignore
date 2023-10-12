@@ -1,11 +1,10 @@
-
 Calculator.sln
 Calculator.vcxproj
 Calculator.vcxproj.filters
 Calculator.vcxproj.user
 CppProperties.json
 .vs/
-.out/
+out/
 .idea/
 cmake-build-debug/
 x64/
