@@ -1,0 +1,7 @@
+<HEAD> Value = "1"
+<BODY> Value = "2"
+<AUDIO> Value = "5"
+</AUDIO>
+<VIDEO> Value = "6" </VIDEO>
+</BODY>
+</HEAD>
