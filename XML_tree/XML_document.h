@@ -4,7 +4,7 @@ class XML_document {
 public:
     XML_document() : root_node(nullptr) {};
     void parse(const std::string& xml);
-    void load(const std::string& path);
+    bool load(const std::string& path);
     void save(const std::string& path);
     void print();
     void for_each(std::function<void(const XML_node&)> callback);

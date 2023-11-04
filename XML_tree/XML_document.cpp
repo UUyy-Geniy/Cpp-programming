@@ -5,9 +5,10 @@ void XML_document::parse(const std::string& xml) {
 	root_node = parse_node(xml, pos);
 }
 
-void XML_document::load(const std::string& path) {
+bool XML_document::load(const std::string& path) {
 	const std::string xml = read_file(path);
 	parse(xml);
+	return true;
 }
 
 void XML_document::save(const std::string& path) {
