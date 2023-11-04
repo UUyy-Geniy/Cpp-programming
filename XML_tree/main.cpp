@@ -8,4 +8,4 @@ int main() {
     doc->print();
 
     return 0;
-}
+};

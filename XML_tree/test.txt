@@ -1,7 +1,15 @@
-<HEAD> Value = "1"
-<BODY> Value = "2"
-<AUDIO> Value = "5"
-</AUDIO>
-<VIDEO> Value = "6" </VIDEO>
-</BODY>
-</HEAD>
+<person>
+  <name>
+    <first>Jeka</first>
+    <last>Romanchuk</last>
+  </name>
+  <age>20</age>
+  <occupation>
+    <title>Student</title>
+    <university>SPbSTU</university>
+    <city>Saint-Petersburg</city>
+  </occupation>
+  <favorite-food>pelmeni</favorite-food>
+  <favorite-color>green</favorite-color>
+  <home>Obchaga_17</home>
+</person>
