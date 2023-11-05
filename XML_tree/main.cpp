@@ -1,11 +1,16 @@
-#include "XML_document.h"
+#include "XML_resource.h"
 
 
 int main() {
-    XML_document* doc = new XML_document();
+    /*XML_document* doc = new XML_document();
 
     doc->load("./test.txt");
-    doc->print();
+    doc->print();*/
+
+    auto T = XML_resource::create();
+    T->load("./test.txt");
+    T->print();
+    T->save("./save_test.xml");
 
     return 0;
 };

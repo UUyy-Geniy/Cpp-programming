@@ -8,7 +8,6 @@ private:
 	XML_resource() : document(std::make_unique<XML_document>()) {};
 public:
 	static std::unique_ptr<XML_resource> create();
-
 	bool load(const std::string& path);
 	void save(const std::string& path);
 	void print();
