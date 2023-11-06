@@ -8,6 +8,11 @@ public:
     void save(const std::string& path);
     void print();
     void for_each(std::function<void(const XML_node&)> callback);
+    Iterator find(std::function<bool(XML_node* node)>);
+    Iterator find_by_tag(const std::string& tag);
+    Iterator find_by_value(const std::string& value);
+    bool add(std::string const& tag, std::string const& value, Iterator it);
+    bool erase(Iterator it);
     Iterator begin();
     Iterator end();
 private:
@@ -19,4 +24,5 @@ private:
     void write_file(const std::string& path, const std::string& content);
     std::string stringify();
     std::string trim(const std::string& str);
+    bool isIteratorValid(Iterator it);
 };

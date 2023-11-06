@@ -1,6 +1,6 @@
 #include "XML_node.h"
 
-void XML_node::append(std::unique_ptr<XML_node> child) {
+void XML_node::add(std::unique_ptr<XML_node> child) {
 	children.push_back(std::move(child));
 }
 std::string XML_node::stringify(const int depth) {
@@ -74,4 +74,25 @@ Iterator XML_node::begin()
 Iterator XML_node::end()
 {
     return Iterator(nullptr, nullptr);
+}
+
+void Iterator::deleteNode() {
+    for (int i = 0; i < root->children.size(); i++) {
+        if (root->children[i].get() == ptr)
+        {
+            root->children[i].reset();
+            root->children.erase(root->children.begin() + i);
+            break;
+        }
+    }
+}
+
+void XML_node::erase(Iterator& it) noexcept {
+    auto& parent = *it->parent;
+    auto& tmp = *it;
+
+    for (int i = 0; i < it->children.size(); i++) {
+        parent.add(std::move(tmp.children[i]));
+    }
+    it.deleteNode();
 }

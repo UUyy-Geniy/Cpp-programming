@@ -1,0 +1,15 @@
+<person>
+  <name>
+    <first>Jeka</first>
+    <last>Romanchuk</last>
+  </name>
+  <occupation>
+    <title>Student</title>
+    <university>SPbSTU</university>
+    <city>Saint-Petersburg</city>
+  </occupation>
+  <favorite-food>pelmeni</favorite-food>
+  <favorite-color>green</favorite-color>
+  <home>Obchaga_17</home>
+  <height>194</height>
+</person>

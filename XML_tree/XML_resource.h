@@ -11,10 +11,15 @@ public:
 	bool load(const std::string& path);
 	void save(const std::string& path);
 	void print();
+	
 	Iterator begin();
 	Iterator end();
-
-
+	Iterator find(std::function<bool(XML_node* node)> callback);
+	Iterator find_by_tag(const std::string& tag);
+	Iterator find_by_value(const std::string& value);
+	bool add(std::string const& tag, std::string const& value, Iterator it) noexcept;
+	bool erase(Iterator it);
+	
 	~XML_resource() = default;
 	XML_resource(const XML_resource&) = delete;
 	XML_resource(XML_resource&&) = delete;
