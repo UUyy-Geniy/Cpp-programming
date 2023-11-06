@@ -1,4 +1,4 @@
-#include "Iterator.h"
+#include "XML_node.h"
 void Iterator::next()
 {
     XML_node* tmp = ptr->next();

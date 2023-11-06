@@ -1,6 +1,5 @@
 #pragma once
 #include "XML_document.h"
-
 class XML_resource
 {
 private:
@@ -8,9 +7,12 @@ private:
 	XML_resource() : document(std::make_unique<XML_document>()) {};
 public:
 	static std::unique_ptr<XML_resource> create();
+	static std::unique_ptr<XML_resource> create(const std::string& path);
 	bool load(const std::string& path);
 	void save(const std::string& path);
 	void print();
+	Iterator begin();
+	Iterator end();
 
 
 	~XML_resource() = default;

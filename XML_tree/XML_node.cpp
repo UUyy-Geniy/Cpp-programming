@@ -37,26 +37,41 @@ int XML_node::numberInChildren(XML_node* element) const
     return -2;
 }
 
-XML_node* XML_node::take_ptr()
-{
-    XML_node* father = this;
-    while (father->children.size() != 0)
-        father = father->children[0].get();
-    return father;
-}
-
 XML_node* XML_node::next()
 {
-    XML_node* father = parent;
-    XML_node* ptr = this;
-    if (father != nullptr)
-    {
-        int i = father->numberInChildren(this);
-        if (i == father->children.size() - 1)
-            return father;
-        else
-            return father->children[i + 1].get()->take_ptr();
-        father = father->parent;
+    if (!children.empty()) {
+        return children[0].get();
     }
-    return nullptr;
+    else {
+        XML_node* currentNode = this;
+        XML_node* parent = this->parent;
+        while (parent != nullptr) {
+            int index = parent->numberInChildren(currentNode);
+            if (index < parent->children.size() - 1) {
+                return parent->children[index + 1].get();
+            }
+            currentNode = parent;
+            parent = currentNode->parent;
+        }
+    }
+}
+
+std::string XML_node::getValue() const
+{
+    return value;
+}
+
+std::string XML_node::getTag() const
+{
+    return tag;
+}
+
+Iterator XML_node::begin()
+{
+    return Iterator(this, nullptr);
+}
+
+Iterator XML_node::end()
+{
+    return Iterator(nullptr, nullptr);
 }

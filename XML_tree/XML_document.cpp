@@ -2,7 +2,7 @@
 
 void XML_document::parse(const std::string& xml) {
 	int pos = 0;
-	root_node = parse_node(xml, pos);
+	root_node = parse_node(xml, pos, nullptr);
 }
 
 bool XML_document::load(const std::string& path) {
@@ -25,15 +25,15 @@ void XML_document::for_each(std::function<void(const XML_node&)> callback) {
 	root_node->for_each(callback);
 }
 
-std::unique_ptr<XML_node> XML_document::parse_node(const std::string& xml, int& pos) {
+std::unique_ptr<XML_node> XML_document::parse_node(const std::string& xml, int& pos, XML_node* parent) {
 	std::string tag = get_next_tag(xml, pos);
 	std::string value = get_next_value(xml, pos);
-	std::unique_ptr<XML_node> node(new XML_node(tag, value));
+	std::unique_ptr<XML_node> node(new XML_node(tag, value, parent));
 
 	std::string next_tag = get_next_tag(xml, pos);
 	while (next_tag != ("/" + tag) && pos < xml.size()) {
 		pos -= next_tag.size() + 2;
-		node->append(parse_node(xml, pos));
+		node->append(parse_node(xml, pos, node.get()));
 		next_tag = get_next_tag(xml, pos);
 	}
 
@@ -107,3 +107,11 @@ std::string XML_document::trim(const std::string& str) {
 
 	return str.substr(start_pos, end_pos - start_pos + 1);
 }
+
+Iterator XML_document::begin() {
+	return root_node->begin();
+};
+
+Iterator XML_document::end() {
+	return root_node->end();
+};
