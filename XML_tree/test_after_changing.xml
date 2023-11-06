@@ -3,7 +3,6 @@
     <first>Jeka</first>
     <last>Romanchuk</last>
   </name>
-  <age>20</age>
   <occupation>
     <title>Student</title>
     <university>SPbSTU</university>
@@ -12,4 +11,5 @@
   <favorite-food>pelmeni</favorite-food>
   <favorite-color>green</favorite-color>
   <home>Obchaga_17</home>
+  <height>194</height>
 </person>

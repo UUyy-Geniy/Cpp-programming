@@ -2,12 +2,13 @@
 
 void XML_document::parse(const std::string& xml) {
 	int pos = 0;
-	root_node = parse_node(xml, pos);
+	root_node = parse_node(xml, pos, nullptr);
 }
 
-void XML_document::load(const std::string& path) {
+bool XML_document::load(const std::string& path) {
 	const std::string xml = read_file(path);
 	parse(xml);
+	return true;
 }
 
 void XML_document::save(const std::string& path) {
@@ -24,15 +25,15 @@ void XML_document::for_each(std::function<void(const XML_node&)> callback) {
 	root_node->for_each(callback);
 }
 
-std::unique_ptr<XML_node> XML_document::parse_node(const std::string& xml, int& pos) {
+std::unique_ptr<XML_node> XML_document::parse_node(const std::string& xml, int& pos, XML_node* parent) {
 	std::string tag = get_next_tag(xml, pos);
 	std::string value = get_next_value(xml, pos);
-	std::unique_ptr<XML_node> node(new XML_node(tag, value));
+	std::unique_ptr<XML_node> node(new XML_node(tag, value, parent));
 
 	std::string next_tag = get_next_tag(xml, pos);
 	while (next_tag != ("/" + tag) && pos < xml.size()) {
 		pos -= next_tag.size() + 2;
-		node->append(parse_node(xml, pos));
+		node->add(parse_node(xml, pos, node.get()));
 		next_tag = get_next_tag(xml, pos);
 	}
 
@@ -105,4 +106,63 @@ std::string XML_document::trim(const std::string& str) {
 	};
 
 	return str.substr(start_pos, end_pos - start_pos + 1);
+}
+
+Iterator XML_document::begin() {
+	return root_node->begin();
+};
+
+Iterator XML_document::end() {
+	return root_node->end();
+};
+
+Iterator XML_document::find(std::function<bool(XML_node* node)> callback) {
+	auto begin_ = begin();
+	auto end_ = end();
+	while (begin_ != end_) {
+		if (callback(&*begin_)) {
+			return begin_;
+		}
+		begin_++;
+	}
+};
+
+Iterator XML_document::find_by_tag(const std::string& tag) {
+	if (!root_node) {
+		return end();
+	}
+	return find([&tag](XML_node* node) {
+		return node->tag == tag;
+	});
+};
+Iterator XML_document::find_by_value(const std::string& value) {
+	if (!root_node) {
+		return end();
+	}
+	return find([&value](XML_node* node) {
+		return node->value == value;
+	});
+};
+
+bool XML_document::add(std::string const& tag, std::string const& value, Iterator it) {
+	if (!isIteratorValid(it)) return false;
+	(*it).add(std::unique_ptr<XML_node>(new XML_node(tag, value, &(*it))));
+	return true;
+};
+
+bool XML_document::isIteratorValid(Iterator it){
+	auto begin_ = begin();
+	auto end_ = end();
+	if (it == end_) return false;
+	while (begin_ != end_) {
+		if (begin_ == it) return true;
+		begin_++;
+	}
+	return false;
+};
+
+bool XML_document::erase(Iterator it)  {
+	if (!isIteratorValid(it) || it == begin()) return false;
+	root_node->erase(it);
+	return true;
 }
