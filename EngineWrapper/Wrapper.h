@@ -11,7 +11,7 @@ public:
 	template<typename Subject, typename...	Args>
 	Wrapper(Subject* subject, int(Subject::* method)(Args...), const InputArgs& input_args) {
 		if (input_args.size() != sizeof...(Args)) {
-			throw std::exception("ERROR: The quantity of function parameters does not align with the number of input arguments.");
+			std::cout << "ERROR: The quantity of function parameters does not align with the number of input arguments.";
 		}
 		for (auto& arg : input_args) {
 			argsTitles.push_back(arg.first);
@@ -22,11 +22,12 @@ public:
 	}
 	int execute(const ArgsMap& args_map) {
 		if (args_map.size() != argsTitles.size()) {
-			throw std::exception("ERROR: Wrong number of aruments.");
+			std::cout <<"ERROR: Wrong number of aruments."; 
+			return 0;
 		}
 		std::vector<int> argsFunc;
-		for (const auto& title : argsTitles) {
-			argsFunc.push_back(const_cast<std::map<std::string, int>&>(args_map)[title]);
+		for (const auto& pair : args_map) {
+			argsFunc.push_back(pair.second);
 		}
 		return function(argsFunc);
 	}
