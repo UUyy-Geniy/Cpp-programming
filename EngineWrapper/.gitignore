@@ -1,0 +1,11 @@
+EngineWrapper.sln
+EngineWrapper.vcxproj
+EngineWrapper.vcxproj.filters
+EngineWrapper.vcxproj.user
+CppProperties.json
+.vs/
+out/
+.idea/
+cmake-build-debug/
+x64/
+Debug/
